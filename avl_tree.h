@@ -19,11 +19,18 @@ public:
 	iterator upper_bound(const Key& key);
 
 	size_t size() const { return size_c; }
-	bool empty() const { return size == 0; };
+	bool empty() const { return size_c == 0; };
 	
-private:	
+private:
+	void big_left_turn(tree_node<Key>* node);
+	void big_right_turn(tree_node<Key>* node);
+	void lesser_left_turn(tree_node<Key>* node);
+	void lesser_right_turn(tree_node<Key>* node);
+
 	class iterator
 	{
 
 	};
+
+
 };
