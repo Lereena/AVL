@@ -11,9 +11,10 @@ struct avl_tree_node
 
 	int height;		
 
-	avl_tree_node(T value_, avl_tree_node<T>* parrent_, avl_tree_node<T>* left_, avl_tree_node<T>* right_) :
+	avl_tree_node(T value_, avl_tree_node<T>* parrent_ = nullptr,
+		avl_tree_node<T>* left_ = nullptr, avl_tree_node<T>* right_ = nullptr) :
 		value(value_), parent(parrent_), left(left_), right(right_),
-		height(0) {}
+		height(1) {}
 
 	~avl_tree_node()
 	{
