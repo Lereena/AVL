@@ -44,3 +44,9 @@ size_t avl_tree<Key>::height(avl_tree_node<Key>* node)
 		return 0;
 	return node->height;
 }
+
+template<typename Key>
+int avl_tree<Key>::balance(avl_tree_node<Key>* node)
+{
+	return height(node->left) - height(node->right);
+}

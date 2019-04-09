@@ -11,11 +11,10 @@ class avl_tree_node
 	avl_tree_node<T>* left;
 	avl_tree_node<T>* right;
 
-	int height;
-	int balance;
+	int height;	
 	side_type side;
 
 	avl_tree_node(T value_, avl_tree_node<T>* parrent_, avl_tree_node<T>* left_, avl_tree_node<T>* right_, side_type side_) :
 		value(value_), parrent(parrent_), left(left_), right(right_),
-		height(0), balance(0), side(side_) {}
+		height(0), side(side_) {}
 };

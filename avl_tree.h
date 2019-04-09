@@ -29,6 +29,7 @@ private:
 	void balancing(avl_tree_node<Key>* node);
 
 	size_t height(avl_tree_node<Key>* node);
+	int balance(avl_tree_node<Key>* node);
 
 	class iterator
 	{
