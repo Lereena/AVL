@@ -3,7 +3,7 @@
 enum side_type {LEFT, RIGHT};
 
 template <typename T>
-class avl_tree_node
+struct avl_tree_node
 {
 	T value;
 

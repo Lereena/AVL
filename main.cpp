@@ -2,5 +2,6 @@
 
 int main()
 {
-
+	avl_tree<int> tree;
+	print_tree(tree);
 }
