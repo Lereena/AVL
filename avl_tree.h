@@ -1,11 +1,11 @@
 #pragma once
-#include "tree_node.h"
+#include "avl_tree_node.h"
 
 template <typename Key>
 class avl_tree
 {
-	tree_node<Key>* root;
-	tree_node<Key>* null_elem;
+	avl_tree_node<Key>* root;
+	avl_tree_node<Key>* null_elem;
 
 	size_t size_c;
 
@@ -22,10 +22,10 @@ public:
 	bool empty() const { return size_c == 0; };
 	
 private:
-	void big_left_turn(tree_node<Key>* node);
-	void big_right_turn(tree_node<Key>* node);
-	void lesser_left_turn(tree_node<Key>* node);
-	void lesser_right_turn(tree_node<Key>* node);
+	void big_left_turn(avl_tree_node<Key>* node);
+	void big_right_turn(avl_tree_node<Key>* node);
+	void lesser_left_turn(avl_tree_node<Key>* node);
+	void lesser_right_turn(avl_tree_node<Key>* node);
 
 	class iterator
 	{
