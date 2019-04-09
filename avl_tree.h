@@ -26,11 +26,12 @@ private:
 	void big_right_turn(avl_tree_node<Key>* node);
 	void lesser_left_turn(avl_tree_node<Key>* node);
 	void lesser_right_turn(avl_tree_node<Key>* node);
+	void balancing(avl_tree_node<Key>* node);
+
+	size_t height(avl_tree_node<Key>* node);
 
 	class iterator
 	{
 
 	};
-
-
 };
