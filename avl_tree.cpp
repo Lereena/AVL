@@ -81,7 +81,7 @@ avl_tree_node<Key>* avl_tree<Key>::remove(avl_tree_node<Key>* root, const Key& k
 		//Если есть 1 или 0 сыновей
 		if (!(root->left) || !(root->right))
 		{
-			Node* temp = root->left ?
+			auto temp = root->left ?
 				root->left :
 				root->right;
 
