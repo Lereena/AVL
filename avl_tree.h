@@ -1,4 +1,6 @@
 #pragma once
+
+#include <cstdio>
 #include "avl_tree_node.h"
 
 template <typename Key>
@@ -10,10 +12,19 @@ class avl_tree
 	size_t size_c;
 
 	class iterator;
+
 public:
 	void insert(Key value);
 	size_t erase(const Key& key);
-	iterator find(const Key& key); 
+
+	iterator find(const Key& key) const {
+        if (!root || key == root->value)
+            return root;
+        if (key < root->data)
+            return find_(key, root->left);
+        else
+            return find_(key, root->right);
+	}
 
 	iterator lower_bound(const Key& key);
 	iterator upper_bound(const Key& key);
@@ -33,6 +44,54 @@ private:
 
 	class iterator
 	{
+        avl_tree_node<Key>* node;
 
+    public:
+	    iterator(avl_tree_node<Key>* node_) :
+	        node(node_) {}
+
+        Key& operator*() { return node->value; }
+
+        iterator& operator++()
+        {
+            iterator temp(node);
+	        node = next();
+	        return temp;
+	    }
+
+        iterator& operator++(int)
+        {
+            node = next();
+            return this;
+        }
+
+        bool operator==(iterator& other)
+        {
+            return node == other.node;
+	    }
+
+        bool operator!=(iterator& other)
+        {
+            return node != other.node;
+        }
+
+    private:
+
+	    avl_tree_node<Key>* next()
+	    {
+	        if (auto temp = node->right)
+            {
+                while (temp->left)
+                    temp = temp->left;
+
+                return temp;
+            }
+
+	        auto temp = node;
+	        while (temp->is_left())
+	            temp = temp->parent;
+
+            return temp->parent;
+	    }
 	};
 };
