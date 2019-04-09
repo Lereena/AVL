@@ -1,6 +1,6 @@
 #pragma once
 
-enum side_type {LEFT, RIGHT};
+enum side_type {LEFT, ROOT, RIGHT};
 
 template <typename T>
 struct avl_tree_node
@@ -14,7 +14,21 @@ struct avl_tree_node
 	int height;	
 	side_type side;
 
-	avl_tree_node(T value_, avl_tree_node<T>* parrent_, avl_tree_node<T>* left_, avl_tree_node<T>* right_, side_type side_) :
+	avl_tree_node(T value_, avl_tree_node<T>* parrent_ = nullptr, side_type side_ = ROOT,
+		avl_tree_node<T>* left_ = nullptr, avl_tree_node<T>* right_ = nullptr) :
 		value(value_), parrent(parrent_), left(left_), right(right_),
 		height(0), side(side_) {}
+
+	~avl_tree_node()
+	{
+		switch (side)
+		{
+		case LEFT: parrent->left = nullptr; break;
+		case RIGHT: parrent->right = nullptr; break;
+		default: break;
+		}
+		parrent = nullptr;
+		left = nullptr;
+		right = nullptr;
+	}
 };

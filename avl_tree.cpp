@@ -9,7 +9,8 @@ void avl_tree<Key>::insert(Key value)
 template<typename Key>
 size_t avl_tree<Key>::erase(const Key& key)
 {
-	return size_t();
+	remove(root, key);
+	
 }
 
 template<typename Key>
@@ -64,4 +65,55 @@ template<typename Key>
 int avl_tree<Key>::balance(avl_tree_node<Key>* node)
 {
 	return height(node->left) - height(node->right);
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::remove(avl_tree_node<Key>* root, const Key& key)
+{
+	if (root == nullptr)
+		return root;
+	if (key < root->key)
+		root->left = deleteNode(root->left, key);
+	else if (key > root->key)
+		root->right = deleteNode(root->right, key);
+	else
+	{
+		//Если есть 1 или 0 сыновей
+		if (!(root->left) || !(root->right))
+		{
+			Node* temp = root->left ?
+				root->left :
+				root->right;
+
+			if (!temp)
+			{
+				temp = root;
+				root = nullptr;
+			}
+			else
+				root->value = temp->value;
+			delete temp;
+		}
+		//Если 2 сына
+		else
+		{
+			auto temp = leftest_from(root->right);
+			root->value = temp->value;
+
+			root->right = deleteNode(root->right,
+				temp->value);
+		}
+	}
+	if (root == nullptr)
+		return root;
+	root.height = max(height(root.left), height(root.right)) + 1;
+}
+
+template<typename Key>
+void avl_tree<Key>::leftest_from(avl_tree_node<Key>* node)
+{
+	auto temp = node;
+	while (temp->left)
+		temp = temp->left;
+	return temp;
 }

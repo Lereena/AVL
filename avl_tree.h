@@ -20,7 +20,10 @@ public:
 	iterator upper_bound(const Key& key);
 
 	size_t size() const { return size_c; }
-	bool empty() const { return size_c == 0; };
+	bool empty() const { return size_c == 0; }
+
+	iterator begin() { return null_elem->left; }
+	iterator end() { return null_elem; }
 
 private:
 	void big_rotate_left(avl_tree_node<Key>* node);
@@ -31,6 +34,10 @@ private:
 
 	size_t height(avl_tree_node<Key>* node);
 	int balance(avl_tree_node<Key>* node);
+
+	avl_tree_node<Key>* remove(avl_tree_node<Key>* root, const Key& key);
+
+	void leftest_from(avl_tree_node<Key>* node);
 
 	class iterator
 	{
