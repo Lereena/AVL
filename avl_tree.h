@@ -22,10 +22,10 @@ public:
 	bool empty() const { return size_c == 0; };
 	
 private:
-	void big_left_turn(avl_tree_node<Key>* node);
-	void big_right_turn(avl_tree_node<Key>* node);
-	void lesser_left_turn(avl_tree_node<Key>* node);
-	void lesser_right_turn(avl_tree_node<Key>* node);
+	void big_rotate_left(avl_tree_node<Key>* node);
+	void big_rotate_right(avl_tree_node<Key>* node);
+	void rotate_left(avl_tree_node<Key>* node);
+	void rotate_right(avl_tree_node<Key>* node);
 	void balancing(avl_tree_node<Key>* node);
 
 	size_t height(avl_tree_node<Key>* node);

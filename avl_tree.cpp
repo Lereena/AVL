@@ -13,28 +13,43 @@ size_t avl_tree<Key>::erase(const Key& key)
 }
 
 template<typename Key>
-void avl_tree<Key>::lesser_left_turn(avl_tree_node<Key>* node)
+void avl_tree<Key>::big_rotate_left(avl_tree_node<Key>* node)
+{
+	rotate_left(node->left);
+	rotate_right(node);
+}
+
+template<typename Key>
+void avl_tree<Key>::big_rotate_right(avl_tree_node<Key>* node)
+{
+	rotate_right(node->right);
+	rotate_left(node);
+}
+
+template<typename Key>
+void avl_tree<Key>::rotate_left(avl_tree_node<Key>* node)
 {
 	auto right = node->right;
 	node->right = right->left;
 	right->left = node;
 
-	node->height = max(height(right->left),
-					   height(right->right)) + 1;
-	right->height = max(height(node->left),
-					    height(node->right)) + 1;
-	right->balance++;
+	node->height = max(height(node->left),
+					   height(node->right)) + 1;
+	right->height = max(height(right->left),
+					    height(right->right)) + 1;
 }
 
 template<typename Key>
-void avl_tree<Key>::lesser_right_turn(avl_tree_node<Key>* node)
+void avl_tree<Key>::rotate_right(avl_tree_node<Key>* node)
 {
 	auto left = node->left;
 	node->left = left->right;
 	left->right = node;
 
-	node->balance++;
-	left->balance--;
+	node->height = max(height(node->left),
+					   height(node->right)) + 1;
+	left->height = max(height(left->left),
+					   height(left->right)) + 1;
 }
 
 template<typename Key>
