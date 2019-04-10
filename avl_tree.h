@@ -14,20 +14,16 @@ class avl_tree
 	class iterator;
 
 public:
+
+    avl_tree() : root(nullptr), size_c(0) {}
+
 	void insert(Key value);
 	size_t erase(const Key& key);
 
-	iterator find(const Key& key) const {
-        if (!root || key == root->value)
-            return root;
-        if (key < root->data)
-            return find_(key, root->left);
-        else
-            return find_(key, root->right);
-	}
+	iterator find(const Key& key) { return find_(key, root); }
 
-	iterator lower_bound(const Key& key);
-	iterator upper_bound(const Key& key);
+	iterator lower_bound(const Key& key) { return lower_bound_(key, root); }
+	iterator upper_bound(const Key& key) { return upper_bound_(key, root); }
 
 	size_t size() const { return size_c; }
 	bool empty() const { return size_c == 0; };
@@ -94,4 +90,47 @@ private:
             return temp->parent;
 	    }
 	};
+
+    iterator find_(Key& key, avl_tree_node<Key>* parent)
+    {
+        if (!parent || key == parent->value)
+            return iterator(parent);
+        if (key < parent->value)
+            return find_(key, parent->left);
+        return find_(key, parent->right);
+    }
+
+    iterator lower_bound_(Key& key, avl_tree_node<Key>* parent)
+    {
+        auto current = parent;
+        avl_tree_node<Key>* next = nullptr;
+        while(current)
+        {
+            if (current->value >= key)
+            {
+                next = current;
+                current = current->left;
+            }
+            else
+                current = current->right;
+        }
+        return iterator(next);
+    }
+
+    iterator upper_bound_(Key& key, avl_tree_node<Key>* parent)
+    {
+        auto current = parent;
+        avl_tree_node<Key>* next = nullptr;
+        while (current)
+        {
+            if (current->value <= key)
+            {
+                next = current;
+                current = current->right;
+            }
+            else
+                current = current->left;
+        }
+        return iterator(next);
+    }
 };

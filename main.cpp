@@ -2,5 +2,7 @@
 
 int main()
 {
+    avl_tree<int> tree();
+
 
 }
