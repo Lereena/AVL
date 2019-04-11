@@ -16,6 +16,8 @@ size_t avl_tree<Key>::erase(const Key& key)
 		node = node->value > key?		
 			node = node->right :
 			node = node->left;
+		if (!node)
+			return 0;
 	}
 	if (!(node->left) || !(node->right)) // Если 1 или 0 сыновей
 	{
@@ -42,16 +44,17 @@ size_t avl_tree<Key>::erase(const Key& key)
 			*temp.become(temp->right);		
 		delete temp;
 	}
+	//TODO Нужно уменшить size_c
 	while (node)
 	{
 		node->height = max(height(node->left),
 						   height(node->right)) + 1;
 		switch (balance(node))
 		{
-		case 1, -1: return 0; break;
+		case 1, -1: return 1; break;
 		case 0: break;
 		default: balancing(node); 
-			if (balance(node) == 0) return 0; //?? Не уверен
+			if (balance(node) == 0) return 1; //?? Не уверен
 			break;
 		}
 		node = node->parent;
