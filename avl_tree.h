@@ -44,9 +44,7 @@ private:
 	void balancing(avl_tree_node<Key>* node);
 
 	size_t height(avl_tree_node<Key>* node);
-	int balance(avl_tree_node<Key>* node);
-
-	avl_tree_node<Key>* remove(avl_tree_node<Key>* root, const Key& key);
+	int balance(avl_tree_node<Key>* node);	
 
 	void leftest_from(avl_tree_node<Key>* node);
 

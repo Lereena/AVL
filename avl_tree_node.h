@@ -18,17 +18,30 @@ struct avl_tree_node
 
 	~avl_tree_node()
 	{
-		if (is_left)		
-			parent->left = nullptr;
-		else
-			parent->right = nullptr;				
-		parent = nullptr;
+		if (parent)
+		{
+			if (is_left)
+				parent->left = nullptr;
+			else
+				parent->right = nullptr;
+			parent = nullptr;
+		}		
 		left = nullptr;
 		right = nullptr;
-	}	
+	}
+
+	void become(avl_tree_node<T>* other)
+	{
+		value = other->value;
+		left = other->left;
+		right = other->right;
+		left->parent = this;
+		right->parent = this;		
+		delete other;
+	}
 
     bool is_left()
     {
-        return this == parent->left;
+        return parent && this == parent->left;
     }
 };

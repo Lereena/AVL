@@ -9,8 +9,53 @@ void avl_tree<Key>::insert(Key value)
 template<typename Key>
 size_t avl_tree<Key>::erase(const Key& key)
 {
-	remove(root, key);
-	
+	//remove(root, key);
+	auto node = root;
+	while (node.value != key)
+	{
+		node = node->value > key?		
+			node = node->right :
+			node = node->left;
+	}
+	if (!(node->left) || !(node->right)) // Если 1 или 0 сыновей
+	{
+		auto temp = node->left ?
+			node->left :
+			node->right;
+		if (!temp) 
+		{
+			temp = node;
+			node = node->parent;			
+		}
+		else
+		{
+			node->value = temp->value;			
+		}
+		delete temp;
+	}
+	else
+	{
+		auto temp = leftest_from(node->right);
+		node->value = temp->value;
+		node = temp->parent;
+		if (temp->right)								
+			*temp.become(temp->right);		
+		delete temp;
+	}
+	while (node)
+	{
+		node->height = max(height(node->left),
+						   height(node->right)) + 1;
+		switch (balance(node))
+		{
+		case 1, -1: return 0; break;
+		case 0: break;
+		default: balancing(node); 
+			if (balance(node) == 0) return 0; //?? Не уверен
+			break;
+		}
+		node = node->parent;
+	}	
 }
 
 template<typename Key>
@@ -65,48 +110,6 @@ template<typename Key>
 int avl_tree<Key>::balance(avl_tree_node<Key>* node)
 {
 	return height(node->left) - height(node->right);
-}
-
-template<typename Key>
-avl_tree_node<Key>* avl_tree<Key>::remove(avl_tree_node<Key>* root, const Key& key)
-{
-	if (root == nullptr)
-		return root;
-	if (key < root->key)
-		root->left = deleteNode(root->left, key);
-	else if (key > root->key)
-		root->right = deleteNode(root->right, key);
-	else
-	{
-		//Если есть 1 или 0 сыновей
-		if (!(root->left) || !(root->right))
-		{
-			auto temp = root->left ?
-				root->left :
-				root->right;
-
-			if (!temp)
-			{
-				temp = root;
-				root = nullptr;
-			}
-			else
-				root->value = temp->value;
-			delete temp;
-		}
-		//Если 2 сына
-		else
-		{
-			auto temp = leftest_from(root->right);
-			root->value = temp->value;
-
-			root->right = deleteNode(root->right,
-				temp->value);
-		}
-	}
-	if (root == nullptr)
-		return root;
-	root.height = max(height(root.left), height(root.right)) + 1;
 }
 
 template<typename Key>
