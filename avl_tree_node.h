@@ -1,27 +1,47 @@
 #pragma once
 
-enum side_type {LEFT, RIGHT};
-
 template <typename T>
-class avl_tree_node
+struct avl_tree_node
 {
-	T value;
+    T value;
 
-	avl_tree_node<T>* parent;
-	avl_tree_node<T>* left;
-	avl_tree_node<T>* right;
+    avl_tree_node<T>* parent;
+    avl_tree_node<T>* left;
+    avl_tree_node<T>* right;
 
-	int height;	
-	side_type side;
+    int height;
 
-	avl_tree_node(T value_, avl_tree_node<T>* parent_, avl_tree_node<T>* left_, avl_tree_node<T>* right_, side_type side_) :
-		value(value_), parent(parent_), left(left_), right(right_),
-		height(0), side(side_) {}
+    avl_tree_node(T value_, avl_tree_node<T>* parent_ = nullptr,
+                  avl_tree_node<T>* left_ = nullptr, avl_tree_node<T>* right_ = nullptr) :
+            value(value_), parent(parent_), left(left_), right(right_),
+            height(1) {}
 
-public:
-
-    bool is_left(avl_tree_node<T> *node)
+    ~avl_tree_node()
     {
-        return node == node->parent->left;
+        if (parent)
+        {
+            if (is_left())
+                parent->left = nullptr;
+            else
+                parent->right = nullptr;
+            parent = nullptr;
+        }
+        left = nullptr;
+        right = nullptr;
+    }
+
+    void become(avl_tree_node<T>* other)
+    {
+        value = other->value;
+        left = other->left;
+        right = other->right;
+        left->parent = this;
+        right->parent = this;
+        delete other;
+    }
+
+    bool is_left()
+    {
+        return parent && this == parent->left;
     }
 };

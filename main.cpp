@@ -2,7 +2,6 @@
 
 int main()
 {
-    avl_tree<int> tree();
-
-
+    avl_tree<int> tree;
+    tree.insert(5);
 }
