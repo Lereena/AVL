@@ -35,8 +35,10 @@ struct avl_tree_node
         value = other->value;
         left = other->left;
         right = other->right;
-        left->parent = this;
-        right->parent = this;
+		if (left)
+			left->parent = this;
+		if (right)
+			right->parent = this;		
         delete other;
     }
 
