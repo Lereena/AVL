@@ -1,30 +1,14 @@
 #include "avl_tree.h"
 
 template<typename Key>
-avl_tree_node<Key>* avl_tree<Key>::insert_(Key& value, avl_tree_node<Key>* parent)
+avl_tree_node<Key>* avl_tree<Key>::insert(Key value)
 {
-    if (!parent)
-    {
-        parent = avl_tree_node<Key>(value, nullptr, nullptr, nullptr);
-        return parent;
-    }
-    if (auto found = find_(value, parent))
-    {
-        found->count++;
-        return found;
-    }
-    if (value < parent->value)
-        parent->left = insert_(value, parent->left);
-    else
-        parent->right = insert_(value, parent->right);
-
-    return balancing(parent);
+	return insert_(value, root);	
 }
 
 template<typename Key>
 size_t avl_tree<Key>::erase(const Key& key)
 {
-    //remove(root, key);
     auto node = root;
     while (node.value != key)
     {
@@ -32,7 +16,7 @@ size_t avl_tree<Key>::erase(const Key& key)
                 node = node->right :
                 node = node->left;
     }
-    if (!(node->left) || !(node->right)) // Åñëè 1 èëè 0 ñûíîâåé
+    if (!(node->left) || !(node->right)) //
     {
         auto temp = node->left ?
                     node->left :
@@ -59,19 +43,60 @@ size_t avl_tree<Key>::erase(const Key& key)
     }
     while (node)
     {
-        node->height = max(height(node->left),
-                           height(node->right)) + 1;
+		restore_height(node);
         switch (balance(node))
         {
             case 1: return 0;
             case -1: return 0;
             case 0: break;
             default: balancing(node);
-                if (balance(node) == 0) return 0; //?? Íå óâåðåí
+                if (balance(node) == 0) return 0; //??
                 break;
         }
         node = node->parent;
     }
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::find(const Key& key)
+{
+	return find_(key, root);	
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::lower_bound(const Key& key)
+{
+	auto current = root;
+	avl_tree_node<Key>* next = nullptr;
+	while (current)
+	{
+		if (current->value >= key)
+		{
+			next = current;
+			current = current->left;
+		}
+		else
+			current = current->right;
+	}
+	return next;
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::upper_bound(const Key& key)
+{
+	auto current = root;
+	avl_tree_node<Key>* next = nullptr;
+	while (current)
+	{
+		if (current->value <= key)
+		{
+			next = current;
+			current = current->right;
+		}
+		else
+			current = current->left;
+	}
+	return next;
 }
 
 template<typename Key>
@@ -95,10 +120,10 @@ avl_tree_node<Key>* avl_tree<Key>::rotate_left(avl_tree_node<Key>* node)
     node->right = right->left;
     right->left = node;
 
-    node->height = max(height(node->left),
-                       height(node->right)) + 1;
-    right->height = max(height(right->left),
-                        height(right->right)) + 1;
+	restore_height(node);
+	restore_height(right);
+
+	return right;
 }
 
 template<typename Key>
@@ -108,10 +133,60 @@ avl_tree_node<Key>* avl_tree<Key>::rotate_right(avl_tree_node<Key>* node)
     node->left = left->right;
     left->right = node;
 
-    node->height = max(height(node->left),
-                       height(node->right)) + 1;
-    left->height = max(height(left->left),
-                       height(left->right)) + 1;
+	restore_height(node);
+	restore_height(left);
+
+	return left;
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::insert_(Key value, avl_tree_node<Key>* parent)
+{
+	if (!parent)
+	{
+		parent = avl_tree_node<Key>(value, nullptr, nullptr, nullptr);
+		return parent;
+	}
+	if (auto found = find_(value, parent))
+	{
+		found->count++;
+		return found;
+	}
+	if (value < parent->value)
+		parent->left = insert_(value, parent->left);
+	else
+		parent->right = insert_(value, parent->right);
+
+	return balancing(parent);
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::find_(const Key& key, avl_tree_node<Key>* parent)
+{
+	if (!parent || key == parent->value)
+		return parent;
+	if (key < parent->value)
+		return find_(key, parent->left);
+	return find_(key, parent->right);
+}
+
+template<typename Key>
+avl_tree_node<Key>* avl_tree<Key>::balancing(avl_tree_node<Key>* node)
+{	
+	restore_height(node);
+	if (balance(node) == 2)
+	{
+		if (balance(node->right) < 0)
+			node->right = rotate_right(node->right);
+		return rotate_left(node);
+	}
+	if (balance(node) == -2)
+	{
+		if (balance(node->left) > 0)
+			node->left = rotate_left(node->left);
+		return rotate_right(node);
+	}
+	return node;	
 }
 
 template<typename Key>
