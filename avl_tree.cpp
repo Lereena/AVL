@@ -1,5 +1,6 @@
 #include "avl_tree.h"
 
+/*
 template<typename Key>
 avl_tree_node<Key>* avl_tree<Key>::insert(Key value)
 {
@@ -210,4 +211,4 @@ void avl_tree<Key>::leftest_from(avl_tree_node<Key>* node)
     while (temp->left)
         temp = temp->left;
     return temp;
-}
+}*/
