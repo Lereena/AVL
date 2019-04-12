@@ -144,12 +144,12 @@ avl_tree_node<Key>* avl_tree<Key>::insert_(Key value, avl_tree_node<Key>* parent
 {
 	if (!parent)
 	{
-		parent = avl_tree_node<Key>(value, nullptr, nullptr, nullptr);
+		parent = new avl_tree_node<Key>(value, nullptr, nullptr, nullptr);
 		return parent;
 	}
 	if (auto found = find_(value, parent))
 	{
-		found->count++;
+		//found->count++;
 		return found;
 	}
 	if (value < parent->value)

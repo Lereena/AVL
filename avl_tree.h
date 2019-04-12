@@ -14,7 +14,6 @@ class avl_tree
 	size_t size_c;	
 
 public:
-
     avl_tree() : root(nullptr), size_c(0) {}
 
 	avl_tree_node<Key>* insert(Key value);
