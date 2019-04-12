@@ -16,7 +16,14 @@ class avl_tree
 public:
     avl_tree() : root(nullptr), size_c(0) {}
 
-	avl_tree_node<Key>* insert(Key value) { return insert_(value, root); }
+	avl_tree_node<Key>* insert(Key value) 
+	{ 
+		if (!root)		
+			root = new avl_tree_node<Key>(value, nullptr, nullptr, nullptr);			
+		else
+			return insert_(value, root);
+		return root;
+	}
 
 	size_t erase(const Key& key)
     {
@@ -149,9 +156,8 @@ private:
 	avl_tree_node<Key>* insert_(Key value, avl_tree_node<Key>* parent)
     {
         if (!parent)
-        {
-            parent = new avl_tree_node<Key>(value, nullptr, nullptr, nullptr);
-            return parent;
+        {            
+            return new avl_tree_node<Key>(value, nullptr, nullptr, nullptr);
         }
         if (auto found = find_(value, parent))
         {
@@ -175,7 +181,7 @@ private:
         return find_(key, parent->right);
     }
 
-    void leftest_from(avl_tree_node<Key>* node)
+    void leftest_from(avl_tree_node<Key>* node) const
     {
         auto temp = node;
         while (temp->left)
@@ -184,9 +190,9 @@ private:
     }
 
 	void restore_height(avl_tree_node<Key>* node)
-    {
-	    auto left = node->left->height;
-	    auto right = node->right->height;
+    {		
+		auto left = node->left ? node->left->height : 0;
+		auto right = node->right ? node->right->height : 0;
 	    node->height = (left > right ? left : right) + 1;
     }
 
@@ -208,15 +214,37 @@ private:
         return node;
     }
 
-	size_t height(avl_tree_node<Key>* node)
+	size_t height(avl_tree_node<Key>* node) const
     {
         if (node == nullptr)
             return 0;
         return node->height;
     }
 
-	int balance(avl_tree_node<Key>* node)
+	int balance(avl_tree_node<Key>* node) const
     {
+		if (!node)
+			return 0;
         return height(node->left) - height(node->right);
     }
+
+	template<typename T>
+	friend void print_tree(const avl_tree<T>& tree);
 };
+
+template<typename T>
+void print_tree(const avl_tree<T>& tree)
+{
+	auto root = tree.root;
+	print_node(root);
+}
+
+template<typename T>
+void print_node(const avl_tree_node<T>* node, int space = 0, int tab = 4)
+{
+	if (!node)
+		return;
+	print_node(node->right, space += tab);
+	std::cout << node->value << std::endl;
+	print_node(node->right, space += tab);
+}
